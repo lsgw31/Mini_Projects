@@ -13,12 +13,12 @@ class Inf(list):
 class GameOfLife:
     def __init__(self, size: int = 50, chance: float = 0.25):
         self.size = size
-        self.m = Inf([Inf([1 if random() < chance else 0 for i in range(size)]) for j in range(size)])
+        self.m = Inf([Inf([int(random() < chance) for i in range(size)]) for j in range(size)])
     
     def iterate(self, wait: int = 0.1):
         while True:
             system('clear')
-            print('\n'.join(''.join(('  ', '[]')[j] for j in i) for i in self.m))
+            print('\n'.join(''.join(('  ', '██')[j] for j in i) for i in self.m))
             self.find_next_state()
             sleep(wait)
     
@@ -35,7 +35,11 @@ class GameOfLife:
                 self.m[row][cell] = int(self.m[row][cell] in (1, 2))
 
     def find_num_living_neighbors(self, coord: tuple):
-        return sum(map(lambda t: self.m[t[0] + coord[0]][t[1] + coord[1]] % 2, ((-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1))))
+        return sum(map(
+                       lambda i: self.m[i[0] + coord[0]][i[1] + coord[1]] % 2, 
+                       ((-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1))
+                       ))
 
 
-GameOfLife().iterate()
+if __name__ == '__main__':
+    GameOfLife().iterate()
