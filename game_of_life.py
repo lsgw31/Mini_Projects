@@ -1,6 +1,4 @@
 from random import random
-from os import system
-from time import sleep
 
 class Inf(list):
     def __getitem__(self, index: int):
@@ -14,13 +12,6 @@ class GameOfLife:
     def __init__(self, size: int = 50, chance: float = 0.25):
         self.size = size
         self.m = Inf([Inf([int(random() < chance) for i in range(size)]) for j in range(size)])
-    
-    def iterate(self, wait: int = 0.1):
-        while True:
-            system('clear')
-            print('\n'.join(''.join(('  ', '██')[j] for j in i) for i in self.m))
-            self.find_next_state()
-            sleep(wait)
     
     def find_next_state(self):
         for row in range(self.size):
@@ -39,7 +30,3 @@ class GameOfLife:
                        lambda i: self.m[i[0] + coord[0]][i[1] + coord[1]] % 2, 
                        ((-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1))
                        ))
-
-
-if __name__ == '__main__':
-    GameOfLife().iterate()

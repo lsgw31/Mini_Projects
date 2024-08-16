@@ -11,32 +11,33 @@ class Puzzle:
         self.moves.append(self.m[zero[0]][zero[1]])
     
     def solve(self) -> str:  # Chain all placex() methods together for modularity
-        ret = '\nIf you entered your numbers correctly, this is what your puzzle should look like:\n'
-        ret += '\033[1m' + '\n'.join(' '.join(str(j) if j else ' ' for j in i) for i in self.m) + '\033[0m'
+        ret = []
+        ret.append('If you entered your numbers correctly, this is what your puzzle should look like:<br>')
+        ret.append('<strong>' + '<br>'.join(' '.join(str(j) if j else '&nbsp;&nbsp;' for j in i) for i in self.m) + '</strong>')
 
         self.place1()
-        ret += '\n'.join(self.yield_moves_and_puzzle())
+        ret.append('<br>'.join(self.yield_moves_and_puzzle()))
 
         self.place23()
-        ret += '\n'.join(self.yield_moves_and_puzzle())
+        ret.append('<br>'.join(self.yield_moves_and_puzzle()))
 
         self.place47()
-        ret += '\n'.join(self.yield_moves_and_puzzle())
+        ret.append('<br>'.join(self.yield_moves_and_puzzle()))
 
         self.finish_solve()
-        ret += '\n'.join(self.yield_moves_and_puzzle(solved = True))
+        ret.append('<br>'.join(self.yield_moves_and_puzzle(solved=True)))
 
-        return ret
+        return ''.join(ret)
     
     def yield_moves_and_puzzle(self, *, solved: bool = False):
-        yield '\n\n\nNow move tiles in this order:'
+        yield '<br><br><br>Now click on the numbered tiles in this order:'
         yield ', '.join(str(i) for i in self.moves)
         self.moves.clear()
         if not solved:
-            yield '\nYour puzzle should now look like this:'
-            yield '\033[1m' + '\n'.join(' '.join(str(j) if j else ' ' for j in i) for i in self.m) + '\033[0m'
+            yield '<br>Your puzzle should now look like this:'
+            yield '<strong>' + '<br>'.join(' '.join(str(j) if j else '&nbsp;&nbsp;' for j in i) for i in self.m) + '</strong>'
         else:
-            yield'\n\033[1mYour puzzle should now be solved!\033[0m'
+            yield'<br><strong>Your puzzle should now be solved!</strong>'
     
     def rotate2x2(self, coord: tuple[int], direction: str):  # rotate 0 around in clockwise/counterclockwise (c/cc) direction in a certain 2x2 quadrant provided by coord
         for i in range(4):
@@ -154,6 +155,3 @@ FINAL_ROTATIONS = {
     (5, 8, 6): [5, 6],
     (8, 6, 5): [6, 5, 8, 6, 5, 8],
 }
-
-if __name__ == '__main__':
-    print(Puzzle(input('\033[1mEnter the numbers in the order that they appear on the grid: \033[0m')).solve())

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Lucas's Miniprojects</title>
+    </head>
+    <body>
+        <h3><a href="https://slidingtiles.com/en/puzzle/play/art/25367-3x3-puzzle#3x3" target="_blank">Sliding Tiles Puzzle</a> Solver</h3>
+        <form action="solve_puzzle", method="post">
+            <label for="puzzle">Enter string of 8 numbers in the order they appear in the above puzzle: </label>
+            <input type="text" name="puzzle">
+            <input type="submit" value="Submit">
+        </form><br>
+        {{ solution }}<br><br>
+
+        <h3><a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">John Conway's Game Of Life</a></h3>
+        <form action="create_GOL" , method="post" onsubmit="doSubmit();return false">
+            <label for="density">Density (0-1): </label>
+            <input id="density" type="number" name="density" step="any" min=0 max=1 value=.25>
+            <label for="size">Size: (1-50)</label>
+            <input id="size" type="number" name="size" min=1 max=50 value=30>
+            <input type="submit" value="Submit">
+        </form><br>
+        <div id="game-state"></div>
+        <script>
+    
+            function updateGameState() {
+                fetch('/next_state')
+                    .then(response => response.json())
+                    .then(data => { document.getElementById('game-state').innerHTML = data })
+            }
+    
+            function doSubmit() {
+                const jsonData = { density: document.getElementById('density').value, size: document.getElementById('size').value };
+    
+                const options = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(jsonData)
+                };
+    
+                fetch('/create_GOL', options);
+                setInterval(updateGameState, 500);
+            }
+        </script>
+    </body>
+</html>
